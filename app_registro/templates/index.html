@@ -1,26 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingresos-gastos:lista</title>
-</head>
 
-<style>
-    table, th, td {
-        border:1px, solid rgb(red, green, blue)
-    }
-</style>
-<body>
-    <header>
-        <h1> Aplicación flask de bz xiii</h1>
-
-    </header>
-
-    <section>
+{% extends "base.html" %}
+{% block pageBase %}
         <h1> Lista de ingresos y gastos</h1>
         <p> Simulacro de contabilidad</p>
+        <p>{{Lista}}</p>
         <table>
             <thead>
                 <tr>
@@ -30,6 +13,15 @@
                 </tr>
             </thead>
             <tbody>
+                {% for item in lista %}
+                    <tr>
+                        <td>{{item.fecha}}</td>
+                        <td>{{item.concepto}}</td>
+                        <td>{{item.cantidad}}€</td>
+                    </tr>
+                {% endfor %}
+                    
+                
                 <tr>
                     <td>18/12/2022</td>
                     <td>Regalo</td>
@@ -40,19 +32,8 @@
                     <td>Nomina</td>
                     <td>1500</td>
                 </tr>
-            </tbody>
-                
+            </tbody>               
         </table>
-
         <a href="/new">Nuevo registro</a>
-    </section>
-
-    <footer>
-       <p>derechos de autor</p>
-
-
-    </footer>
-    
-    
-</body>
-</html>
+{% endblock %}
+   
