@@ -9,3 +9,12 @@ def index():
 @app.route("/new")
 def create():
     return render_template("new.html", pageTitle = "Nuevo")
+
+
+@app.route("/update")
+def edit():
+    return render_template("update.html", pageTitle = "Modificar")
+
+@app.route("/delete")
+def remove():
+    return render_template("delete.html", pageTitle = "Borrar")

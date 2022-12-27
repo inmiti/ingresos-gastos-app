@@ -22,18 +22,26 @@ flask --app hello run
 ```
 
 ## Comando para actualizar el servidor con cambios de codigo en tiempo real
-````
+
+```
 flask --app hello --debug run
 ```
 
 ## Comando especial para lanzar el servidor en un puerto diferente
 
 - Esto se utiliza en el caso que el puerto 5000 este ocupado
+
 ```
 flask --app hello run -p 5001
 ```
 
 ## Comando para lanzar en modo debug y con puerto cambiado
-````
+```
 flask --app hello --debug run -p 5001
+```
+
+## Otra opcion sería agregar las siguientes líneas, para ejecutar el servidor y actualizar en tiempo real:
+```
+FLASK_APP = main.py 
+FLASK_DEBUG = true
 ```
