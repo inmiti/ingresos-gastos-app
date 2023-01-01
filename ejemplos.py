@@ -20,5 +20,8 @@ print(lectura1)
 '''
 import csv
 
-myFile= open('data/movimientos.txt', "r")
-myFile = csv.reader(myFile, delimiter=",", quotechar=' " ')
+myFile= open('data/movimientos.txt', "a", newline='')
+lectura = csv.writer(myFile, delimiter=",", quotechar='"')
+lectura.writerow(['15/12/2022','Comida', -169.30])
+
+myFile.close()
