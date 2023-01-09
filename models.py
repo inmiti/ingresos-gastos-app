@@ -28,11 +28,11 @@ def select_by(id): # devolverá una registro con el id de la entrada
     mifichero.close()
 
 
-    return registro_buscado
+    return diccionario
 
 def delete_by(id): # borrara el registro cuyo id coinciden con el de la entrada del fichero
     fichero_old = open(MOVIMIENTOS_FILE,'r')
-    fichero_new = open(MOVIMIENTOS_FILE_NEW,'w')
+    fichero_new = open(MOVIMIENTOS_FILE_NEW,'w',newline='')
 
     csvReader = csv.reader(fichero_old, delimiter=",", quotechar='"')
     csvWriter = csv.writer(fichero_new, delimiter=",", quotechar='"')
@@ -70,4 +70,20 @@ def insert(registro_form): # crear nuevo registro compatible con el csv, asignan
     myFile.close()
 
 def update_by(id, registro_modificado):
-    pass
+    fichero_old = open(MOVIMIENTOS_FILE,'r')
+    fichero_new = open(MOVIMIENTOS_FILE_NEW,'w',newline="")
+
+    csvReader = csv.reader(fichero_old, delimiter=",", quotechar='"')
+    csvWriter = csv.writer(fichero_new, delimiter=",", quotechar='"')
+
+    for registro in csvReader:
+        if registro[0] != str(id):
+            csvWriter.writerow(registro)
+        else:
+            csvWriter.writerow([str(id)]+ registro_modificado)
+    
+    fichero_old.close()
+    fichero_new.close()
+
+    os.remove(MOVIMIENTOS_FILE)
+    os.rename(MOVIMIENTOS_FILE_NEW, MOVIMIENTOS_FILE)

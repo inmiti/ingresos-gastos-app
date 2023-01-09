@@ -1,7 +1,7 @@
 from flask import Flask
 
 app = Flask(__name__) #inicializa la app con __name__ es main.py en este caso, ya que hacemos export FLASK_APP = main.py y lask --app main --debug run
-from app_registro.routes_v1 import * #hay que referenciar las ruts debajo de app:
+from app_registro.routes import * #hay que referenciar las ruts debajo de app:
 
 
 # para inicializar el servidor de flask en mac:  export FLASK_APP = main.py en el terminal

@@ -4,7 +4,7 @@ import csv
 import os
 from datetime import date, datetime
 from config import *
-from models import select_all
+from models import *
 
 @app.route("/")
 def index():

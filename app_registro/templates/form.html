@@ -4,7 +4,7 @@
 <h1>Esto es {{ typeAction }} de Ingresos y Gastos</h1>
 
 
-<form action="/new" method="post">
+<form action={{urlForm}} method="post">
     <label for="date">Fecha</label>
     <input type="date" name = "date" value="{{ dataForm.date }}" required>
     <br>
@@ -14,7 +14,7 @@
     <label for="quantity">Cantidad</label>
     <input type="number" name = "quantity" placeholder="Ingrese cantidad" step ="0.01" value="{{ dataForm.quantity }}">
     <br>
-    <button type='submit'>{{butonAction}}</button>
+    <button type='submit'>{{typeButon}}</button>
 </form>
 
 <a href="/">Volver</a>
