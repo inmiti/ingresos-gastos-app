@@ -1,50 +1,63 @@
 from app_registro import app
 from flask import render_template, request, redirect
 import csv
+import os
 from datetime import date, datetime
+from config import *
+from models import *
 
 @app.route("/")
 def index():
-    fichero = open('data/movimientos.csv','r'   )
-    csvReader = csv.reader(fichero, delimiter=",", quotechar='"')
-    datos = []
-    for item in csvReader:
-        datos.append(item)
-    
-    #datos = [{'fecha':'18/12/2022','concepto': 'Regalo','cantidad':-276.00}, { 'fecha':'19/12/2022','concepto': 'Nomina', 'cantidad':1700}, {'fecha':'20/12/2022','concepto': 'Ropa','cantidad':-56.50} ]
+    datos = select_all()
     return render_template("index.html", pageTitle = "Listas", lista = datos)
 
 @app.route("/new", methods =['GET', 'POST'])
 def create():
     if request.method == 'GET':
-        return render_template("new.html", pageTitle = "Nuevo", typeAction = "alta", butonAction = "Guardar")
+        return render_template("new.html", pageTitle = "Nuevo", typeAction = "alta", butonAction = "Guardar", dataForm = {})
     else:
-        myFile= open('data/movimientos.csv', 'a', newline='') #abrir archivo
-        lectura = csv.writer(myFile, delimiter=",", quotechar='"') #creamos objeto lectura de csv para poder editar
+        error = validateForm(request.form)
         
-        #fechaFormat =datetime.strptime(request.form['date'], '%Y-%m-%d') #formatear fecha para que se pase al formato aaaa-mm-dd. hay qque hacer .date() para pasar a class datetime.date, para poder comparar luego con date.today()
-        #requerimos que la fecha introducida sea inferior o igual al día de hoy:
-        
-        hoy = date.today().isoformat() #iso format pasa la class date a str
-        
-        if request.form['date'] > hoy:
-            return render_template("new.html", pageTitle = "Nuevo", typeAction = "alta", butonAction = "Guardar")
+        if error: 
+            return render_template("new.html", pageTitle = "Nuevo", typeAction = "alta", butonAction = "Guardar", msError = error, dataForm = request.form)
         else:
-            lectura.writerow([request.form['date'],request.form['concept'], request.form['quantity']]) #guarda los datos en el archivo.
-            myFile.close()
+            insert([request.form['date'],
+            request.form['concept'], 
+            request.form['quantity']]) #guarda los datos en el archivo.
 
     return redirect('/')
 
 
-@app.route("/update")
-def edit():
-    return render_template("update.html", pageTitle = "Modificar", typeAction = "modificar", butonAction = "Editar")
+@app.route("/update/<int:id>", methods= ['GET', 'POST'])
+def edit(id):
+    if request.method == 'GET':
 
-@app.route("/delete")
-def remove():
-    return render_template("delete.html", pageTitle = "Borrar", typeAction = "borrar", butonAction = "Guardar")
+        registro = select_by(id)
+        return render_template("update.html", pageTitle = "Modificar", typeAction = "modificar", butonAction = "Editar", dataForm =registro)
+    else:
+        pass
 
+@app.route("/delete/<int:id>", methods = ["GET", "POST"])
+def remove(id):
+    if request.method == "GET":
+        
+        registro_buscado = select_by(id)
+        
+        if len(registro_buscado) > 0: #en el caso de que no encontrar el registro len =0, redirecciona a index
+            return render_template("delete.html", pageTitle = "Eliminar", registros = registro_buscado)
+        else:
+            return redirect("/")
+    else:
+        delete_by(id)
+        return redirect("/")
 
-
-def validateForm():
-    pass
+def validateForm(requestForm):
+    hoy = date.today().isoformat() #iso format pasa la class date a str
+    errores = []
+    if requestForm['date'] > hoy:
+        errores.append("fecha inválida: La fecha ha de ser igual o anterior al día de hoy")
+    if requestForm['concept'] == "":
+        errores.append("concepto vacío: Introduce un concepto para registrar el ingreso o gasto")
+    if requestForm['quantity'] == "" or float(requestForm['quantity']) ==0.0:
+        errores.append("cantidad vacío o cero: Introduce una cantidad positiva para ingresos y negativa para gastos")
+    return errores
