@@ -20,11 +20,22 @@ def select_by(id): # devolverá una registro con el id de la entrada
         if registro[0] ==str(id):
             registro_buscado = registro
     
-    diccionario = dict()
+     diccionario = dict()
+     
+     nombres =['id','date', 'concept', 'quantity']
+
+     for i in range(len(nombres)):
+        diccionario[nombres[i]] = registro_buscado[i]
+
+
+    '''
     diccionario['id'] = registro_buscado[0]
     diccionario['date'] = registro_buscado[1]
     diccionario['concept'] = registro_buscado[2]
     diccionario['quantity'] = registro_buscado[3]
+    '''
+   
+
     mifichero.close()
 
 
